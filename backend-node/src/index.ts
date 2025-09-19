@@ -7,6 +7,8 @@ import cors from 'cors';
 import { DbConnector } from './lib/db';
 import { Logger } from './utils/logger';
 
+import otpRouter from './routes/otp.routes';
+
 
 DbConnector.connect({ host: process.env.DB_URL as string });
 
@@ -25,7 +27,7 @@ app.use(cors(
   }
 ));
 
-// app.use('/otp', otpRouter);
+app.use('/otp', otpRouter);
 
 
 
