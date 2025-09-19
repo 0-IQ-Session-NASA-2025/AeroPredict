@@ -96,6 +96,29 @@ git push origin frontend-web/my-feature
 # Create pull request through GitHub/GitLab interface
 ```
 
+### Team Member Daily Routine
+
+```bash
+# Morning routine (EVERYONE):
+git checkout develop
+git pull origin develop
+git checkout -b frontend/my-feature
+
+# Work routine:
+# ... code in your folder ...
+git add frontend/my-component/
+git commit -m "feat(frontend): add my component"
+
+# Integration routine (2-3x per day):
+git checkout develop
+git pull origin develop
+git checkout frontend/my-feature
+git merge develop  # Resolve small conflicts immediately
+git push origin frontend/my-feature
+
+# Create PR to develop (not main!)
+```
+
 ## Common Errors and Solutions
 
 ### Invalid Branch Name
