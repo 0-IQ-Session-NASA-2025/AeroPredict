@@ -1,0 +1,63 @@
+#!/bin/bash
+# Prevent direct pushes to main branch and validate branch names
+protected_branches=('main' 'develop')
+
+# Use more reliable method to get current branch
+current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+echo "🔍 Current branch: '$current_branch'"
+
+# Check if pushing to protected branches
+for protected_branch in "${protected_branches[@]}"; do
+    if [ "$current_branch" = "$protected_branch" ]; then
+        echo "❌ Direct pushes to the '$protected_branch' branch are not allowed!"
+        echo ""
+        echo "Please use the following workflow:"
+        
+        if [ "$protected_branch" = "main" ]; then
+            echo "For main branch:"
+            echo "1. Create a feature branch from develop: git checkout develop && git checkout -b module-name/feature-name"
+            echo "2. Make your changes and commit"
+            echo "3. Push your feature branch: git push test module-name/feature-name"
+            echo "4. Create a pull request to merge into develop (not main)"
+            echo "5. After PR approval, team lead will merge develop → main"
+        elif [ "$protected_branch" = "develop" ]; then
+            echo "For develop branch:"
+            echo "1. You should be working on a feature branch, not develop directly"
+            echo "2. Create a feature branch: git checkout develop && git checkout -b module-name/feature-name"
+            echo "3. Make your changes and commit"
+            echo "4. Push your feature branch: git push test module-name/feature-name"
+            echo "5. Create a pull request to merge into develop"
+        fi
+        
+        echo ""
+        echo "This ensures code review and maintains branch stability."
+        exit 1
+    fi
+done
+
+# FIXED: Correct regex pattern
+# Allow: letters, numbers, hyphens, underscores
+# Format: module/feature (hyphen at end of character class)
+branch_regex='^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$'
+
+if [[ $current_branch =~ $branch_regex ]]; then
+    echo "✅ Branch name '$current_branch' is valid!"
+    echo "🚀 Proceeding with push to remote"
+else
+    echo "❌ Invalid branch name: '$current_branch'"
+    echo ""
+    echo "Branch names must follow this format:"
+    echo "  module-name/feature-name"
+    echo ""
+    echo "✅ Valid Examples:"
+    echo "  frontend-web/user-profile"
+    echo "  backend-node/add-auth"
+    echo "  data-processing/satellite-analysis"
+    echo ""
+    echo "❌ Your branch '$current_branch' failed the pattern check"
+    echo ""
+    echo "Please rename your branch:"
+    echo "  git branch -m $current_branch module-name/feature-name"
+    exit 1
+fi

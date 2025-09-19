@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Branch naming convention validation
+current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+# Allow main branch for now (will be protected by pre-push hook)
+if [ "$current_branch" = "main" ]; then
+    exit 0
+fi
+
+# Valid branch name pattern: module_name/feature_name
+# Examples: frontend-web/fix-bug, backend-node/add-auth, frontend-app/user-profile
+
+# branch_regex='^[a-z0-9\-]+\/[a-z0-9\-]+$'
+
+# if [[ ! $current_branch =~ $branch_regex ]]; then
+#    echo "❌ Invalid branch name: '$current_branch'"
+#    echo ""
+#    echo "Branch names must follow this format:"
+#    echo "  module_name/feature_name"
+#    echo ""
+#    echo "Examples:"
+#    echo "  frontend-web/fix-bug"
+#    echo "  backend-node/add-auth"
+#    echo "  frontend-app/user-profile"
+#    echo "  backend-python/api-optimization"
+#    exit 1
+# fi

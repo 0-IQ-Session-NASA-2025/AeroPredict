@@ -1,0 +1,97 @@
+#!/bin/bash
+# Commit message validation hook with colorful output
+# This enforces conventional commit format: type: description
+
+# Color definitions
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[1;37m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+# Enhanced regex pattern
+commit_regex='^(feat|fix|docs|style|refactor|test|chore|ci|build|perf): .{1,50}'
+
+# Colorful error message
+error_msg="${RED}❌ COMMIT REJECTED!${NC}
+
+${BOLD}${WHITE}Invalid commit message format.${NC}
+
+${YELLOW}📋 Required Format:${NC}
+${CYAN}type: description${NC}
+
+${YELLOW}📝 Available Types:${NC}
+${GREEN}feat${NC}     - New features
+${BLUE}fix${NC}      - Bug fixes  
+${MAGENTA}docs${NC}     - Documentation changes
+${CYAN}style${NC}    - Code style/formatting
+${WHITE}refactor${NC} - Code refactoring
+${YELLOW}test${NC}     - Adding/updating tests
+${GREEN}chore${NC}    - Maintenance tasks
+${BLUE}ci${NC}       - CI/CD changes
+${MAGENTA}build${NC}    - Build system changes  
+${CYAN}perf${NC}     - Performance improvements
+
+${YELLOW}✅ Good Examples:${NC}
+${GREEN}feat: add user login functionality${NC}
+${BLUE}fix: resolve database connection issue${NC}
+${MAGENTA}docs: update installation guide${NC}
+${CYAN}style: fix linting errors in auth module${NC}
+${WHITE}refactor: optimize satellite data processing${NC}
+${YELLOW}test: add unit tests for API endpoints${NC}
+
+${YELLOW}❌ Bad Examples:${NC}
+${RED}added new feature${NC}
+${RED}fix bug${NC}
+${RED}updated docs${NC}
+${RED}WIP: working on authentication${NC}"
+
+# Check commit message format
+if ! grep -qE "$commit_regex" "$1"; then
+    echo -e "$error_msg" >&2
+    echo ""
+    echo -e "${YELLOW}💡 Tip: Use 'git commit --amend' to fix your message${NC}" >&2
+    exit 1
+fi
+
+# Check commit message length
+commit_length=$(head -n1 "$1" | wc -c)
+if [ $commit_length -gt 72 ]; then
+    echo -e "${RED}❌ COMMIT MESSAGE TOO LONG!${NC}" >&2
+    echo ""
+    echo -e "${YELLOW}📏 Current length:${NC} ${RED}$commit_length characters${NC}" >&2
+    echo -e "${YELLOW}📏 Maximum allowed:${NC} ${GREEN}72 characters${NC}" >&2
+    echo ""
+    echo -e "${YELLOW}✂️  Please shorten your message:${NC}" >&2
+    echo -e "${CYAN}$(head -n1 "$1")${NC}" >&2
+    echo ""
+    echo -e "${YELLOW}💡 Tip: Use 'git commit --amend' to fix the length${NC}" >&2
+    exit 1
+fi
+
+# Success message
+commit_message=$(head -n1 "$1")
+commit_type=$(echo "$commit_message" | cut -d':' -f1)
+
+case $commit_type in
+    "feat")     color=$GREEN ;;
+    "fix")      color=$BLUE ;;
+    "docs")     color=$MAGENTA ;;
+    "style")    color=$CYAN ;;
+    "refactor") color=$WHITE ;;
+    "test")     color=$YELLOW ;;
+    "chore")    color=$GREEN ;;
+    "ci")       color=$BLUE ;;
+    "build")    color=$MAGENTA ;;
+    "perf")     color=$CYAN ;;
+    *)          color=$WHITE ;;
+esac
+
+echo -e "${GREEN}✅ COMMIT ACCEPTED!${NC}"
+echo -e "${BOLD}Type:${NC} ${color}$commit_type${NC}"
+echo -e "${BOLD}Message:${NC} ${WHITE}$commit_message${NC}"
+echo -e "${YELLOW}📊 Length:${NC} ${GREEN}$commit_length/72 characters${NC}"
