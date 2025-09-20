@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { OtpController } from '../controllers/otp.controller';
+import { OtpController } from '../../controllers/v1/otp.controller';
 
 const router: Router = Router();
 
