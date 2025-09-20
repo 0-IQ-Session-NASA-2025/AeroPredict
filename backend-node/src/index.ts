@@ -7,8 +7,7 @@ import cors from 'cors';
 import { DbConnector } from './lib/db';
 import { Logger } from './utils/logger';
 
-import otpRouter from './routes/otp.routes';
-
+import apiRoutes from './routes';
 
 DbConnector.connect({ host: process.env.DB_URL as string });
 
@@ -27,8 +26,8 @@ app.use(cors(
   }
 ));
 
-app.use('/otp', otpRouter);
-
+// All API routes under /api
+app.use('/api', apiRoutes);
 
 
 const server = app.listen(PORT, async ()=> {

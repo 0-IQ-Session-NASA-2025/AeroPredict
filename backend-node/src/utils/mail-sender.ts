@@ -18,9 +18,9 @@ const mailSender = async (email: string, otp: string): Promise<void> => {
     });
 
     const mailOptions: MailOptions = {
-        from: `E-Shop`,
+        from: `Aero-Predict`,
         to: email,
-        subject: 'E-Shop 2FA Code',
+        subject: 'Aero-Predict 2FA Code',
         text: `${otp} is your email authentication code`,
         html: `<p><strong>${otp}</strong> is your email authentication code</p>`
     };
