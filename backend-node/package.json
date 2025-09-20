@@ -1,0 +1,32 @@
+{
+  "name": "backend-node",
+  "packageManager": "yarn@3.6.4",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/nodemailer": "^6.4.17",
+    "@types/validator": "^13.15.2",
+    "@types/ws": "^8.18.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "chalk": "4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "ioredis": "^5.6.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.4",
+    "nodemailer": "^7.0.5",
+    "ts-node": "^10.9.2",
+    "validator": "^13.15.15",
+    "winston": "^3.17.0",
+    "ws": "^8.18.3"
+  }
+}

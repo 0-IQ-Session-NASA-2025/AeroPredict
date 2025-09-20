@@ -50,6 +50,7 @@ out/
 .env.test.local
 .env.production.local
 .env.staging
+!.env.sample
 
 # Python (backend-python)
 __pycache__/
