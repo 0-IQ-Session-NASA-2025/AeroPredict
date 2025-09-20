@@ -82,7 +82,7 @@ export class AuthController {
       ResponseHandler.success(res, {user, token});
 
     } catch (error) {
-      ResponseHandler.internalError(res, undefined, "Internal server error");
+      ResponseHandler.internalError(res, (error as Error).message, "Internal server error");
     }
   }
 
