@@ -9,7 +9,7 @@ import { Logger } from './utils/logger';
 
 import apiRoutes from './routes';
 
-DbConnector.connect({ host: process.env.DB_URL as string });
+// DbConnector.connect({ host: process.env.DB_URL as string });
 
 const app = express();
 const PORT = process.env.PORT;
