@@ -1,13 +1,20 @@
 import Redis from 'ioredis';
 // todo change everything to logger
-const redisConfig = {
-    host: (process.env.REDIS_HOST || 'localhost') as string,
-    port: (process.env.REDIS_PORT || 6379) as number
-}
+// const redisConfig = {
+//     host: (process.env.REDIS_HOST || 'localhost') as string,
+//     port: (process.env.REDIS_PORT || 6379) as number
+// }
+
+const redis = process.env.REDIS_URL 
+    ? new Redis(process.env.REDIS_URL)
+    : new Redis({
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT || '6379')
+    });
 
 // Function to set a key-value pair in Redis
 export async function setCache(key: string, value: any, ttl=0): Promise<void> {
-    const redis = new Redis(redisConfig);
+    // const redis = new Redis(redisConfig);
     try {
         const jsonString: string = JSON.stringify(value);
         if(ttl > 0){
@@ -25,7 +32,7 @@ export async function setCache(key: string, value: any, ttl=0): Promise<void> {
 
 // Function to get the value associated with a key from Redis
 export async function getCache(key: string): Promise<{ value: any, key: string }> {
-    const redis = new Redis(redisConfig);
+    // const redis = new Redis(redisConfig);
     try {
         const value = await redis.get(key);
         if (value !== null) {
@@ -55,7 +62,7 @@ export async function getCache(key: string): Promise<{ value: any, key: string }
 
 // Function to delete a key from Redis
 export async function deleteCache(key: string): Promise<void> {
-    const redis = new Redis(redisConfig);
+    // const redis = new Redis(redisConfig);
     try {
         await redis.del(key);
         // console.log(`Key '${key}' deleted from Redis`);
