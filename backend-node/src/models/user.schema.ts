@@ -157,6 +157,6 @@ userSchema.pre('save', async function() {
   }
 });
 
-userSchema.index({ email: 1 });
+// userSchema.index({ email: 1 });
 
 export const User = mongoose.model<IUser, IUserModel>("User", userSchema);
