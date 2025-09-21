@@ -26,7 +26,7 @@ export async function setCache(key: string, value: any, ttl=0): Promise<void> {
     } catch (error) {
         console.error('Error setting key-value pair in Redis:', error);
     } finally {
-        redis.disconnect();
+        // redis.disconnect();
     }
 }
 
@@ -37,13 +37,13 @@ export async function getCache(key: string): Promise<{ value: any, key: string }
         const value = await redis.get(key);
         if (value !== null) {
             // console.log(`Value for key '${key}': ${value}`);
-            redis.disconnect();
+            // redis.disconnect();
             return {
                 value: JSON.parse(value),
                 key
             }
         } else {
-            redis.disconnect();
+            // redis.disconnect();
             // console.log(`No value found for key '${key}'`);
             return {
                 value: null,
@@ -69,7 +69,7 @@ export async function deleteCache(key: string): Promise<void> {
     } catch (error) {
         console.error('Error deleting key from Redis:', error);
     } finally {
-        redis.disconnect();
+        // redis.disconnect();
     }
 }
 
