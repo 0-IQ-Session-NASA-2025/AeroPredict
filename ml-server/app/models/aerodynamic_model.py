@@ -46,8 +46,6 @@ class AerodynamicModel:
         return cd_0 + cd_induced + cd_pressure
 
     def calculate_pressure_coefficient(self, velocity: float, angle_of_attack: float) -> float:
-        dynamic_pressure = 0.5 * 1.225 * (velocity ** 2)
-
         angle_factor = 1 + 0.5 * math.sin(math.radians(angle_of_attack * 2))
         velocity_factor = min(velocity / 100.0, 2.0)
 
@@ -64,7 +62,11 @@ class AerodynamicModel:
         cd = self.calculate_drag_coefficient(angle_of_attack, cl)
         cp = self.calculate_pressure_coefficient(velocity, angle_of_attack)
 
-        lift_force = cl * dynamic_pressure * wing_area
+        # Calculate aerodynamic forces based on wing geometry
+        aspect_ratio = (wing_span ** 2) / wing_area if wing_area > 0 else 8.0
+        efficiency_factor = 1.0 / (1 + 0.045 * aspect_ratio)
+
+        lift_force = cl * dynamic_pressure * wing_area * efficiency_factor
         drag_force = cd * dynamic_pressure * wing_area
 
         confidence_score = self._calculate_confidence(velocity, angle_of_attack, altitude)
